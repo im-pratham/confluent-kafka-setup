@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ImageStream
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: ksql-datagen
+  name: ksql-datagen
+spec:
+  tags:
+  - annotations: null
+    from:
+      kind: DockerImage
+      name: confluentinc/ksqldb-examples:6.0.1
+    generation: null
+    importPolicy: {}
+    name: 6.0.1
+status:
+  dockerImageRepository: ""

@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ImageStream
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: connect
+  name: connect
+spec:
+  tags:
+  - annotations: null
+    from:
+      kind: DockerImage
+      name: cnfldemos/cp-server-connect-datagen:0.4.0-6.0.1
+    generation: null
+    importPolicy: {}
+    name: 0.4.0-6.0.1
+status:
+  dockerImageRepository: ""

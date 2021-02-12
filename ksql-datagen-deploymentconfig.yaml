@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    kompose.cmd: F:\kafka\kompose\kompose.exe convert --provider=openshift
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: ksql-datagen
+  name: ksql-datagen
+spec:
+  replicas: 1
+  selector:
+    io.kompose.service: ksql-datagen
+  strategy:
+    resources: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: ksql-datagen
+    spec:
+      containers:
+      - args:
+        - bash
+        - -c
+        - echo Waiting for Kafka to be ready... && cub kafka-ready -b broker:29092
+          1 40 && echo Waiting for Confluent Schema Registry to be ready... && cub
+          sr-ready schema-registry 8081 40 && echo Waiting a few seconds for topic
+          creation to finish... && sleep 11 && tail -f /dev/null
+        env:
+        - name: KSQL_CONFIG_DIR
+          value: /etc/ksql
+        - name: STREAMS_BOOTSTRAP_SERVERS
+          value: broker:29092
+        - name: STREAMS_SCHEMA_REGISTRY_HOST
+          value: http://schema-registry
+        - name: STREAMS_SCHEMA_REGISTRY_PORT
+          value: "8081"
+        image: ' '
+        name: ksql-datagen
+        resources: {}
+      hostname: ksql-datagen
+      restartPolicy: Always
+  test: false
+  triggers:
+  - type: ConfigChange
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - ksql-datagen
+      from:
+        kind: ImageStreamTag
+        name: ksql-datagen:6.0.1
+    type: ImageChange
+status: {}

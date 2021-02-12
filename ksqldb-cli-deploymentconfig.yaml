@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    kompose.cmd: F:\kafka\kompose\kompose.exe convert --provider=openshift
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: ksqldb-cli
+  name: ksqldb-cli
+spec:
+  replicas: 1
+  selector:
+    io.kompose.service: ksqldb-cli
+  strategy:
+    resources: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: ksqldb-cli
+    spec:
+      containers:
+      - command:
+        - /bin/sh
+        image: ' '
+        name: ksqldb-cli
+        resources: {}
+        tty: true
+      restartPolicy: Always
+  test: false
+  triggers:
+  - type: ConfigChange
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - ksqldb-cli
+      from:
+        kind: ImageStreamTag
+        name: ksqldb-cli:6.0.1
+    type: ImageChange
+status: {}
